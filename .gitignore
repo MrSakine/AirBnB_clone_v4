@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+models/__pycache__/
+models/**/__pycache__/
+tests/__pycache__/
+tests/**/__pycache__/
+web_flask/__pycache__/
+web_flask/**/__pycache__/
+web_dynamic/__pycache__/
+web_dynamic/**/__pycache__/
+objects.json
+*.json
+test_params_create
+venv/
+main_delete.py
+*.txt
+main_place_amenities.py
+test_get_count.py
+
+# C extensions
+*.so
+
+# Extra
+versions/*
