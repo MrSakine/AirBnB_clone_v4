@@ -2,7 +2,7 @@ const $ = window.$;
 $(document).ready(function () {
   const nameAmenity = [];
   $('input:checkbox').click(function () {
-    if ($(this).is(":checked")) {
+    if ($(this).is(':checked')) {
       nameAmenity.push($(this).attr('data-name'));
     } else {
       const nameIndex = nameAmenity.indexOf($(this).attr('data-name'));
@@ -11,17 +11,17 @@ $(document).ready(function () {
     $('.amenities h4').text(nameAmenity.join(', '));
   });
 
-  $.get("http://localhost:5001/api/v1/status/", data => {
-    if (data.status == "OK") {
-      $('DIV#api_status').addClass("available");
+  $.get('http://0.0.0.0:5001/api/v1/status/', (res) => {
+    if (res.status === 'OK') {
+      $('div#api_status').addClass('available');
     } else {
-      $('DIV#api_status').removeClass("available");
+      $('div#api_status').removeClass('available');
     }
   });
 
   $.ajax({
     type: 'POST',
-    url: 'http://localhost:5001/api/v1/places_search',
+    url: 'http://0.0.0.0:5001/api/v1/places_search',
     data: '{}',
     dataType: 'json',
     contentType: 'application/json',
@@ -40,9 +40,8 @@ $(document).ready(function () {
                   <div class="description">
                     ${place.description}
                   </div>
-                </article>`
+                </article>`;
       }));
     }
   });
-
 });
