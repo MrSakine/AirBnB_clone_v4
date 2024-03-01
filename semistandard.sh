@@ -1,0 +1,1 @@
+semistandard ./*/**/*.js --global $ --fix
