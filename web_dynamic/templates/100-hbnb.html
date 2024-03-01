@@ -28,10 +28,12 @@
           <ul>
             {% for state in states %}
             <li>
-              <h2>{{ state[0].name }}:</h2>
+              <h2>
+                <input type="checkbox" data-id="{{ state[0].id }}" data-name="{{ state[0].name }}">{{ state[0].name }}
+              </h2>
               <ul>
                 {% for city in state[1] %}
-                <li>{{ city.name }}</li>
+                <li><input type="checkbox" data-id="{{ city.id }}" data-name="{{ city.name }}">{{ city.name }}</li>
                 {% endfor %}
               </ul>
             </li>
