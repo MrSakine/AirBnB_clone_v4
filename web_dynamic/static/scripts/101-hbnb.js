@@ -50,6 +50,7 @@ $(document).ready(function () {
   });
 
   function search (filters = {}) {
+    $('.loader').text('Fetching data...');
     $.ajax({
       type: 'POST',
       url: `http://${HOST}:5001/api/v1/places_search`,
@@ -58,38 +59,61 @@ $(document).ready(function () {
       contentType: 'application/json',
       success: function (data) {
         $('SECTION.places').empty();
-        $('SECTION.places').append(data.map(place => {
-          return `<article>
-                    <div class="title_box">
-                      <h2>${place.name}</h2>
-                      <div class="price_by_night">${place.price_by_night}</div>
-                    </div>
-                    <div class="information">
-                      <div class="max_guest">${place.max_guest} Guests</div>
-                      <div class="number_rooms">${place.number_rooms} Bedrooms</div>
-                      <div class="number_bathrooms">${place.number_bathrooms} Bathrooms</div>
-                    </div>
-                    <div class="description">
-                      ${place.description}
-                    </div>
-                    <div class=reviews>
-                      <div class="review_title">
-                        <h2>X Reviews</h2>
-                        <span>hide</span>
-                      </div>
-                      <ul>
-                          <li>
-                              <h3>From Bob Dylan the 27th January 2017</h3>
-                              <p>Runshi is an epic host. Nothing more I can say. 5 star!</p>
-                          </li>
-                          <li>
-                              <h3>From Connor the 4th January 2017</h3>
-                              <p>Highly recommended!</p>
-                          </li>
-                      </ul>
-                    </div>
-                  </article>`;
-        }));
+        data.forEach(place => {
+          $('.loader').text('Fetching data...');
+          $.get(`http://${HOST}:5001/api/v1/places/${place.id}/reviews`, function (reviews) {
+            $.get(`http://${HOST}:5001/api/v1/users/${place.user_id}/`, function (user) {
+              $('.loader').text('');
+              let reviewsHTML = '';
+              reviews.forEach((review) => {
+                const originalDate = new Date(review.created_at);
+                const day = originalDate.getDate();
+                const month = originalDate.toLocaleString('en-US', { month: 'long' });
+                const year = originalDate.getFullYear();
+                const formattedDate = `${day}th ${month} ${year}`;
+
+                reviewsHTML += `
+                <li>
+                  <h3>From ${user.first_name} ${user.last_name} the ${formattedDate}</h3>
+                  <p>${review.text}</p>
+                </li>`;
+              });
+              const template = `
+              <article>
+                <div class="title_box">
+                  <h2>${place.name}</h2>
+                  <div class="price_by_night">${place.price_by_night}</div>
+                </div>
+                <div class="information">
+                  <div class="max_guest">${place.max_guest} Guests</div>
+                  <div class="number_rooms">${place.number_rooms} Bedrooms</div>
+                  <div class="number_bathrooms">${place.number_bathrooms} Bathrooms</div>
+                </div>
+                <div class="description">
+                  ${place.description}
+                </div>
+                <div class=reviews data-id="${place.id}">
+                  <div class="review_title">
+                    <h2>${reviews.length} Reviews</h2>
+                    <span class="toggle-hide-show">hide</span>
+                  </div>
+                  <ul>
+                  ${reviewsHTML}
+                  </ul>
+                </div>
+              </article>`;
+
+              $('SECTION.places').append(template);
+              $(`.reviews[data-id="${place.id}"] .review_title span`).on('click', function (e) {
+                const reviewsContainer = $(this).closest('.reviews');
+                const reviewsList = reviewsContainer.find('ul');
+                reviewsList.toggleClass('hide');
+                const spanText = reviewsList.hasClass('hide') ? 'show' : 'hide';
+                $(this).text(spanText);
+              });
+            });
+          });
+        });
       }
     });
   }

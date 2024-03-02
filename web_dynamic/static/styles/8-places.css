@@ -123,6 +123,14 @@
   flex-direction: column;
   justify-content: center;
   padding: 0;
+  opacity: 1;
+  overflow: hidden;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.places .reviews > ul.hide {
+  opacity: 0;
+  max-height: 0;
 }
 
 .places .reviews ul li h3 {
