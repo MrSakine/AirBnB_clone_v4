@@ -3,6 +3,7 @@
 This repository is about the linking of `api` folder & `web_static` through `web_dynamic`. JQUERY is being used to do DOM manipulations, send & get data from the API
 
 To setup data for mysql, use
+
 ```bash
 cat dump.sql | mysql -u root -p
 ```
